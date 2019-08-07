@@ -1,39 +1,54 @@
 import './index.css'
 
-const $ = s => document.querySelector(s)
-const $$ = s => document.querySelectorAll(s)
+class Carousel {
+  constructor(root) {
+    this.root = root
+    this.dotsCt = root.querySelector('.dots')
+    this.dots = Array.from(root.querySelectorAll('.dots > span'))
+    this.panels = Array.from(root.querySelectorAll('.panels > a'))
+    this.pre = root.querySelector('.action .pre')
+    this.next = root.querySelector('.action .next')
 
-$('.carousel .dots').onclick = function(e) {
-  if(e.target.tagName !== 'SPAN') return 
-  let index = Array.from($$('.carousel .dots span')).indexOf(e.target)
-  setDots(index)
-  setPanels(index)
+    this.bind()
+  }
+
+  bind() {
+    this.dotsCt.onclick = e => {
+      if(e.target.tagName !== 'SPAN') return 
+      let index = this.dots.indexOf(e.target)
+
+      this.setDots(index)
+      this.setPanels(index)
+    }
+
+    this.pre.onclick = e => {
+      let index = this.dots.indexOf(this.root.querySelector('.dots .active'))
+      index = (index - 1 + this.dots.length) % this.dots.length
+
+      this.setDots(index)
+      this.setPanels(index)
+    }
+
+    this.next.onclick = e => {
+      let index = this.dots.indexOf(this.root.querySelector('.dots .active'))
+      index = (index + 1) % this.dots.length
+
+      this.setDots(index)
+      this.setPanels(index)
+    }  
+  }
+
+  setDots(index) {
+    this.dots.forEach(dot => dot.classList.remove('active'))
+    this.dots[index].classList.add('active')
+  }
+
+  setPanels(index) {
+    this.panels.forEach(panel => panel.style.zIndex = 1)
+    this.panels[index].style.zIndex = 10
+  }
+
+
 }
 
-$('.pre').onclick = function(e) {
-  let index = Array.from($$('.carousel .dots span')).indexOf($('.carousel .dots .active'))
-  // 计算选中的上一个，+ $$('.carousel .dots span').length 避免得到负数
-  index = (index - 1 + $$('.carousel .dots span').length) % $$('.carousel .dots span').length
-  setDots(index)
-  setPanels(index)
-}
-
-$('.next').onclick = function(e) {
-  let index = Array.from($$('.carousel .dots span')).indexOf($('.carousel .dots .active'))
-  index = (index + 1) % $$('.carousel .dots span').length
-  console.log(index)
-  setDots(index)
-  setPanels(index)
-}
-
-function setDots(index) {
-  $$('.carousel .dots span').forEach(dot => dot.classList.remove('active'))
-  $$('.carousel .dots span')[index].classList.add('active')
-}
-
-function setPanels(index) {
-  $$('.carousel .panels a').forEach(panel => panel.style.zIndex = 1)
-  $$('.carousel .panels a')[index].style.zIndex = 10
-}
-
-
+document.querySelectorAll('.carousel').forEach(carousel => new Carousel(carousel))

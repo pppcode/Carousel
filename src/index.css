@@ -1,6 +1,7 @@
 .carousel {
   max-width: 400px;
   height: 200px;
+  margin-top: 60px;
 }
 
 .carousel .panels {
@@ -47,7 +48,6 @@
   order: 2;
   flex: 1;
   text-align: center;
-  border: 1px solid red;
 }
 
 .carousel .dots > span {
