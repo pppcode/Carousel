@@ -29,16 +29,40 @@
 
 封装成组件，使用 ES6 语法，面向对象的组件化的方式
 
+
+## 第三步，考虑代码的扩展性
+
 **问题**
 
 没有切换效果，切换时去加效果，若用到此轮播换种特效的话就会不能用，效果入侵到了代码中了
 
 **优化**
 
-组件和动画效果分离
+组件和动画效果分离，
 
+加渐变特效
+```
+new Carousel(document.querySelector('.carousel'), fade)
 
-## 第三步，考虑代码的扩展性
+  ...
+
+setPanels(toIndex, fromIndex) {
+  // 动画执行完后，执行回调函数，到最终的状态
+  this.animation(this.panels[fromIndex], this.panels[toIndex], () => {
+    this.panels.forEach(panel => panel.style.zIndex = 1)
+    this.panels[toIndex].style.zIndex = 10
+  })
+
+}
+  ...
+
+// 定义动画
+function fade(fromNode, toNode, callback) {
+  console.log(fromNode, toNode)
+  callback()
+}
+```
+
 
 
 
