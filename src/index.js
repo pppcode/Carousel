@@ -1,14 +1,13 @@
 import './index.css'
 
 class Carousel {
-  constructor(root, animation) {
-    this.animation = animation || ((fromNode, toNode, callback) => callback())
-    this.root = root
-    this.dotsCt = root.querySelector('.dots')
-    this.dots = Array.from(root.querySelectorAll('.dots > span'))
-    this.panels = Array.from(root.querySelectorAll('.panels > a'))
-    this.pre = root.querySelector('.action .pre')
-    this.next = root.querySelector('.action .next')
+  constructor(root) {
+    this.root = root 
+    this.panels = Array.from(root.querySelectorAll('.panels a'))
+    this.dotCt = root.querySelector('.dots')
+    this.dots = Array.from(root.querySelectorAll('.dots span'))
+    this.pre = root.querySelector('.pre')
+    this.next = root.querySelector('.next')
 
     this.bind()
   }
@@ -26,47 +25,36 @@ class Carousel {
   }
 
   bind() {
-    this.dotsCt.onclick = e => {
-      if(e.target.tagName !== 'SPAN') return 
-      let index = this.dots.indexOf(e.target)
+    this.dotCt.onclick = e => {
+      if(e.target.tagName !== 'SPAN') return
 
-      this.setDots(index)
-      this.setPanels(index, this.index)
+      let index = this.dots.indexOf(e.target)
+      this.setDot(index)
+      this.showPage(index)
     }
 
     this.pre.onclick = e => {
-      this.setPanels(this.preIndex, this.index)
-      this.setDots(this.preIndex)
+      let index = this.preIndex
+      this.setDot(index)
+      this.showPage(index)
     }
 
     this.next.onclick = e => {
-      this.setPanels(this.nextIndex, this.index)
-      this.setDots(this.nextIndex)
-    }  
+      let index = this.nextIndex
+      this.setDot(index)
+      this.showPage(index)
+    }
   }
 
-  setDots(index) {
+  setDot(index) {
     this.dots.forEach(dot => dot.classList.remove('active'))
     this.dots[index].classList.add('active')
   }
 
-  setPanels(toIndex, fromIndex) {
-    // 动画执行完后，执行回调函数，到最终的状态
-    this.animation(this.panels[fromIndex], this.panels[toIndex], () => {
-      this.panels.forEach(panel => panel.style.zIndex = 1)
-      this.panels[toIndex].style.zIndex = 10
-    })
-
+  showPage(index) {
+    this.panels.forEach(panel => panel.style.zIndex = 0)
+    this.panels[index].style.zIndex = 10
   }
-
 }
 
-// 定义动画
-function fade(fromNode, toNode, callback) {
-  console.log(fromNode, toNode)
-  callback()
-}
-
-const c = new Carousel(document.querySelector('.carousel'), fade)
-
-//document.querySelectorAll('.carousel').forEach(carousel => new Carousel(carousel), fade)
+const carousel = new Carousel(document.querySelector('.carousel'))
